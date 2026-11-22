@@ -15,12 +15,14 @@ TARGET = sailfish-fpd-community
 QT -= gui
 QT += dbus
 
-LIBS += -lhybris-common
+
+CONFIG += link_pkgconfig
+PKGCONFIG += libgbinder glib-2.0
 
 SOURCES += src/sailfish-fpd-community.cpp \
     src/androidfp.cpp \
     src/fpdcommunity.cpp \
-    src/hardware/biometry_fp_api.cpp \
+    src/hardware/biometry_fp_gbinder.c \
     src/util/property_store.cpp
 
 DISTFILES += \
@@ -38,7 +40,6 @@ HEADERS += \
     src/androidfp.h \
     src/biometry.h \
     src/fpdcommunity.h \
-    src/hardware/android_hw_module.h \
     src/util/property_store.h
 
 target.path = /usr/bin/

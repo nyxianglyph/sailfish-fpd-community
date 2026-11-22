@@ -6,11 +6,11 @@ Release:    1
 License:    LICENSE
 URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
-Requires:   droid-biometry-fp >= 1.0.0
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5DBus)
 BuildRequires:  desktop-file-utils
-BuildRequires:  libhybris-devel
+BuildRequires:  pkgconfig(libgbinder)
+BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  systemd
 Provides:   sailfish-fpd
 
