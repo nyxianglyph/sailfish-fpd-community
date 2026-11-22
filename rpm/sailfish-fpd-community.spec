@@ -1,7 +1,7 @@
 Name:       sailfish-fpd-community
 
 Summary:    FPD Community
-Version:    1.1.1
+Version:    1.2.0
 Release:    1
 License:    LICENSE
 URL:        http://example.org/
