@@ -715,7 +715,8 @@ UHardwareBiometryRequestStatus u_hardware_biometry_cancel(UHardwareBiometry self
         return SYS_UNKNOWN;
     self->enroll_pending = FALSE;
     if (self->cancel) {
-        call_void(self->cancel, 1, NULL, "cancel");
+        /* ICancellationSignal.cancel() is oneway: there is no reply to read. */
+        gbinder_client_transact_sync_oneway(self->cancel, 1, NULL);
         gbinder_client_unref(self->cancel);
         self->cancel = NULL;
     }
