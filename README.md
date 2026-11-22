@@ -1,5 +1,41 @@
 # Sailfish Fingerprint Daemon - Community Edition
 
+## This branch: AIDL fingerprint HALs over libgbinder
+
+Branch `gbinder-aidl` replaces the libhybris bridge to the Android-side
+`libbiometry_fp_api` library (HIDL 2.x only) with an implementation on top of
+libgbinder (`src/hardware/biometry_fp_gbinder.c`). It is meant for devices
+whose vendor image only ships the AIDL HAL
+`android.hardware.biometrics.fingerprint.IFingerprint` (Android 13 and later).
+
+- Nothing has to be built in an Android tree: no `libbiometry_fp_api`, no
+  `droid-biometry-fp` package, no `fake_crypt`. Build the RPM in the Sailfish
+  SDK; it needs `libgbinder-devel`, `glib2-devel` and the Qt5 Core/DBus
+  development packages.
+- The auth token for enrolling comes from the AIDL Gatekeeper
+  (`android.hardware.gatekeeper.IGatekeeper/default`).
+- At start the daemon performs the `ISharedSecret` negotiation that keystore2
+  does on Android. Without it Gatekeeper cannot produce auth tokens.
+- If `vendor.xiaomi.hardware.fingerprintextension.IXiaomiFingerprint/default`
+  is present, the daemon reports running operations to it. Xiaomi's
+  `mfp-daemon` only lights an under-display sensor when it has been told so;
+  it then handles touch detection and illumination itself.
+- The HAL instance defaults to `default`; set `FPD_HAL_INSTANCE` in the
+  service environment for another one.
+- Fingerprints are stored by the HAL for Android user 0.
+
+On the device, `sailfish-devicelock-fpd` has to replace
+`jolla-devicelock-plugin-encsfa`/`-encpartition`; those have no fingerprint
+client.
+
+Tested on the Xiaomi 14T (`degas`, MT6897, Android 14 vendor, Goodix optical
+under-display sensor): enrolling from Settings and unlocking work. The parcel
+layouts follow the AIDL definitions, with UBports' biometryd as a reference.
+Not tested on any other device.
+
+The build instructions below describe the HIDL version on `master` and do not
+apply to this branch.
+
 This daemon implements the DBUS API of the Jolla sailfish-fpd packge, and can be used with sailfish-devicelock-fpd
 to add fingerprint support to community ports.
 
